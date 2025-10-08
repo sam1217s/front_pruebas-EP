@@ -1,39 +1,56 @@
-import {apiClient} from '../plugins/pluginAxios.js';
+import { apiClient } from '../plugins/pluginAxios.js'
 
-// Función GET
+// GET - Obtener datos
 export async function getData(url) {
-    try {
-        const response = await apiClient.get(url);
-        return response.data;
-    } catch (error) {
-        console.error('Error en la petición GET:', error);
-        throw error;
-    }
-};
-
-// Función POST
-export async function postData(url, data) {
-    try {
-        console.log('this is data from postData: ', data);
-        console.log('this is url: ', url);
-        const response = await apiClient.post(url, data);
-        return response.data;
-    } catch (error) {
-        console.error('Error en la petición POST:', error);
-        throw error;
-    }
+  try {
+    const response = await apiClient.get(url)
+    return response.data
+  } catch (error) {
+    console.error('Error en GET:', error)
+    throw error
+  }
 }
 
-// Función PUT
+// POST - Crear datos
+export async function postData(url, data) {
+  try {
+    const response = await apiClient.post(url, data)
+    return response.data
+  } catch (error) {
+    console.error('Error en POST:', error)
+    throw error
+  }
+}
+
+// PUT - Actualizar datos
 export async function putData(url, data) {
-    try {
-        const response = await apiClient.put(url, data);
-        console.log('this is data from putData: ', data);
-        console.log('this is URL from putData: ', url);
-        
-        return response.data;
-    } catch (error) {
-        console.error('Error en la petición PUT:', error);
-        throw error;
-    }
+  try {
+    const response = await apiClient.put(url, data)
+    return response.data
+  } catch (error) {
+    console.error('Error en PUT:', error)
+    throw error
+  }
+}
+
+// DELETE - Eliminar datos
+export async function deleteData(url) {
+  try {
+    const response = await apiClient.delete(url)
+    return response.data
+  } catch (error) {
+    console.error('Error en DELETE:', error)
+    throw error
+  }
+}
+
+// PATCH - Actualización parcial
+export async function patchData(url, data) {
+  try {
+    const response = await apiClient.patch(url, data)
+    return response.data
+  } catch (error) {
+    console.error('Error en PATCH:', error)
+    throw error
+  }
 }
