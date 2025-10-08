@@ -5,7 +5,7 @@
       <div style="position: relative; height: 90px; width: 100%; display: flex; align-items: center; justify-content: center;">
         <q-avatar size="90px"
           style="position: absolute; left: 0; top: 0; bottom: 0; margin: auto 0 auto 16px; z-index: 5; background: #5EB930; display: flex; align-items: center; justify-content: center;">
-          <img src="/logo_sena.png" style="height: 90px; width: auto; background-color: #39a900;" />
+          <img src="/logo-sena.png" style="height: 90px; width: auto; background-color: #39a900;" />
         </q-avatar>
         <span style="font-size: 3rem; font-weight: bold; line-height: 80px;">REPFORA EP</span>
       </div>
@@ -16,7 +16,7 @@
         <q-card class="q-pa-md login-card">
           <!-- Header de la tarjeta -->
           <div class="column items-center" style="width: 100%; margin-bottom: 1rem;">
-            <img src="/logo-del-sena-01.png" alt="Logo SENA" style="width: 80px; height: auto; margin-bottom: 12px;">
+            <img src="/logo-sena.png" alt="Logo SENA" style="width: 80px; height: auto; margin-bottom: 12px;">
             <div class="text-h5 text-bold text-center" style="color: #111;">INGRESO A REPFORA EP</div>
           </div>
 
@@ -41,59 +41,98 @@
 
           <!-- Formulario de login -->
           <q-form @submit.prevent="onSubmit" v-if="selectedRole" class="q-gutter-md form-container">
-            <!-- Formulario para Administrador -->
+            
+            <!-- ============================================ -->
+            <!-- FORMULARIO PARA ADMINISTRADOR -->
+            <!-- ============================================ -->
             <template v-if="selectedRole === 'ADMINISTRADOR'">
+              <q-select
+                filled
+                v-model="form.roleAdmin"
+                :options="roleAdminOptions"
+                label="ROL DE COORDINADOR"
+                class="rounded-select"
+                :rules="[val => !!val || 'Selecciona un rol']"
+              >
+                <template v-slot:prepend>
+                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">admin_panel_settings</span>
+                </template>
+              </q-select>
+
               <q-input 
                 filled 
                 v-model="form.correo" 
-                label="CORREO"
+                label="CORREO ELECTRÓNICO"
                 type="email"
                 :rules="[val => !!val || 'El correo es requerido']"
-                class="rounded-select">
+                class="rounded-select"
+              >
                 <template v-slot:prepend>
                   <span class="material-symbols-outlined" style="font-size: 24px; color:#888">mail</span>
                 </template>
               </q-input>
             </template>
 
-            <!-- Formulario para Instructor -->
+            <!-- ============================================ -->
+            <!-- FORMULARIO PARA INSTRUCTOR -->
+            <!-- ============================================ -->
             <template v-if="selectedRole === 'INSTRUCTOR'">
               <q-input 
                 filled 
                 v-model="form.documento" 
-                label="DOCUMENTO"
+                label="NÚMERO DE DOCUMENTO"
                 type="text"
                 :rules="[val => !!val || 'El documento es requerido']"
-                class="rounded-select">
+                class="rounded-select"
+              >
                 <template v-slot:prepend>
                   <span class="material-symbols-outlined" style="font-size: 24px; color:#888">badge</span>
                 </template>
               </q-input>
             </template>
 
-            <!-- Formulario para Aprendiz -->
+            <!-- ============================================ -->
+            <!-- FORMULARIO PARA APRENDIZ -->
+            <!-- ============================================ -->
             <template v-if="selectedRole === 'APRENDIZ'">
+              <q-select
+                filled
+                v-model="form.tipoDocumento"
+                :options="tipoDocumentoOptions"
+                label="TIPO DE DOCUMENTO"
+                class="rounded-select"
+                :rules="[val => !!val || 'Selecciona el tipo de documento']"
+              >
+                <template v-slot:prepend>
+                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">assignment_ind</span>
+                </template>
+              </q-select>
+
               <q-input 
                 filled 
-                v-model="form.ficha" 
-                label="NÚMERO DE FICHA"
+                v-model="form.documento" 
+                label="NÚMERO DE DOCUMENTO"
                 type="text"
-                :rules="[val => !!val || 'La ficha es requerida']"
-                class="rounded-select">
+                :rules="[val => !!val || 'El documento es requerido']"
+                class="rounded-select"
+              >
                 <template v-slot:prepend>
-                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">confirmation_number</span>
+                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">badge</span>
                 </template>
               </q-input>
             </template>
 
-            <!-- Contraseña (común para todos) -->
+            <!-- ============================================ -->
+            <!-- CONTRASEÑA (común para todos) -->
+            <!-- ============================================ -->
             <q-input 
               filled 
               v-model="form.password" 
               label="CONTRASEÑA"
               :type="showPassword ? 'text' : 'password'"
               :rules="[val => !!val || 'La contraseña es requerida']"
-              class="rounded-select">
+              class="rounded-select"
+            >
               <template v-slot:prepend>
                 <span class="material-symbols-outlined" style="font-size: 24px; color:#888">lock</span>
               </template>
@@ -121,7 +160,7 @@
                 :loading="loading"
                 :disable="loading"
                 class="wide-btn"
-                style="width: 100%; max-width: 300px;"
+                style="width: 100%; max-width: 300px; background-color: #39a900;"
               />
             </div>
           </q-form>
@@ -159,20 +198,32 @@ const selectedRole = ref('')
 const showPassword = ref(false)
 const loading = ref(false)
 
+// Opciones de roles
 const roleOptions = [
   { label: 'Administrador', value: 'ADMINISTRADOR' },
   { label: 'Instructor', value: 'INSTRUCTOR' },
   { label: 'Aprendiz', value: 'APRENDIZ' }
 ]
 
+// Opciones para administrador
+const roleAdminOptions = [
+  'ETAPA PRODUCTIVA VIRTUAL',
+  'ETAPA PRODUCTIVA PRESENCIAL'
+]
+
+// Opciones para tipo de documento
+const tipoDocumentoOptions = ['CC', 'TI', 'CE', 'Pasaporte']
+
+// Formulario
 const form = ref({
   correo: '',
   documento: '',
-  ficha: '',
+  tipoDocumento: 'CC',
+  roleAdmin: 'ETAPA PRODUCTIVA VIRTUAL',
   password: ''
 })
 
-// Función de login
+// Función de login ACTUALIZADA según la API
 async function onSubmit() {
   // Validar que se haya seleccionado un rol
   if (!selectedRole.value) {
@@ -181,9 +232,15 @@ async function onSubmit() {
   }
 
   // Validar campos según el rol
-  if (selectedRole.value === 'ADMINISTRADOR' && !form.value.correo) {
-    warning('Campo requerido', 'Ingresa tu correo electrónico')
-    return
+  if (selectedRole.value === 'ADMINISTRADOR') {
+    if (!form.value.correo) {
+      warning('Campo requerido', 'Ingresa tu correo electrónico')
+      return
+    }
+    if (!form.value.roleAdmin) {
+      warning('Campo requerido', 'Selecciona tu rol de coordinador')
+      return
+    }
   }
 
   if (selectedRole.value === 'INSTRUCTOR' && !form.value.documento) {
@@ -191,9 +248,15 @@ async function onSubmit() {
     return
   }
 
-  if (selectedRole.value === 'APRENDIZ' && !form.value.ficha) {
-    warning('Campo requerido', 'Ingresa tu número de ficha')
-    return
+  if (selectedRole.value === 'APRENDIZ') {
+    if (!form.value.tipoDocumento) {
+      warning('Campo requerido', 'Selecciona el tipo de documento')
+      return
+    }
+    if (!form.value.documento) {
+      warning('Campo requerido', 'Ingresa tu número de documento')
+      return
+    }
   }
 
   if (!form.value.password) {
@@ -204,22 +267,40 @@ async function onSubmit() {
   loading.value = true
 
   try {
-    // Construir el payload según el rol
-    let payload = {
-      password: form.value.password,
-      tipo: selectedRole.value
+    let endpoint = ''
+    let payload = {}
+
+    // ✅ CONSTRUIR ENDPOINT Y PAYLOAD SEGÚN LA DOCUMENTACIÓN DE LA API
+    if (selectedRole.value === 'ADMINISTRADOR') {
+      endpoint = 'users/login'
+      payload = {
+        role: form.value.roleAdmin,
+        email: form.value.correo,
+        password: form.value.password
+      }
+    } else if (selectedRole.value === 'INSTRUCTOR') {
+      endpoint = 'instructors/login'
+      payload = {
+        document: form.value.documento,
+        password: form.value.password
+      }
+    } else if (selectedRole.value === 'APRENDIZ') {
+      endpoint = 'apprentices/login'
+      payload = {
+        documentType: form.value.tipoDocumento,
+        documentNumber: form.value.documento,
+        password: form.value.password
+      }
     }
 
-    if (selectedRole.value === 'ADMINISTRADOR') {
-      payload.correo = form.value.correo
-    } else if (selectedRole.value === 'INSTRUCTOR') {
-      payload.documento = form.value.documento
-    } else if (selectedRole.value === 'APRENDIZ') {
-      payload.ficha = form.value.ficha
-    }
+    console.log('🔐 Intentando login...')
+    console.log('📍 Endpoint:', endpoint)
+    console.log('📦 Payload:', payload)
 
     // Hacer la petición de login
-    const response = await postData('auth/login', payload)
+    const response = await postData(endpoint, payload)
+
+    console.log('✅ Response:', response)
 
     if (response.token) {
       // PASO 1: Guardar en localStorage
@@ -232,28 +313,43 @@ async function onSubmit() {
       
       // PASO 3: Guardar en el store
       authStore.setAuth(response.token, {
-        ...response.user,
-        role: selectedRole.value
+        name: response.name || response.firstName || 'Usuario',
+        email: response.email || form.value.correo,
+        role: selectedRole.value,
+        ...response
       })
       
       success('¡Bienvenido!', `Inicio de sesión exitoso como ${selectedRole.value}`)
       
-      // PASO 4: Redireccionar según el rol
+      // PASO 4: Limpiar formulario
+      form.value = {
+        correo: '',
+        documento: '',
+        tipoDocumento: 'CC',
+        roleAdmin: 'ETAPA PRODUCTIVA VIRTUAL',
+        password: ''
+      }
+      
+      // PASO 5: Redireccionar al inicio
       setTimeout(() => {
-        if (selectedRole.value === 'ADMINISTRADOR') {
-          router.push('/admin/dashboard')
-        } else if (selectedRole.value === 'INSTRUCTOR') {
-          router.push('/instructor/dashboard')
-        } else if (selectedRole.value === 'APRENDIZ') {
-          router.push('/aprendiz/registro')
-        } else {
-          router.push('/inicio')
-        }
+        router.push('/inicio')
       }, 500)
+    } else {
+      error('Error en el login', 'No se recibió el token de autenticación')
     }
   } catch (err) {
-    console.error('Error en login:', err)
-    error('Credenciales incorrectas', 'Verifica tus datos e intenta nuevamente')
+    console.error('❌ Error en login:', err)
+    
+    // Mostrar mensaje de error más específico
+    let errorMessage = 'Verifica tus datos e intenta nuevamente'
+    
+    if (err.response) {
+      errorMessage = err.response.data?.msg || err.response.data?.message || errorMessage
+    } else if (err.message) {
+      errorMessage = err.message
+    }
+    
+    error('Credenciales incorrectas', errorMessage)
   } finally {
     loading.value = false
   }
@@ -277,8 +373,37 @@ async function onSubmit() {
   border-radius: 12px;
 }
 
+.rounded-select :deep(.q-field__control) {
+  border-radius: 12px;
+}
+
 .wide-btn {
   font-weight: 600;
   letter-spacing: 1px;
+  border-radius: 8px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Animaciones */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .login-card {
+    width: 95%;
+    padding: 16px;
+  }
 }
 </style>

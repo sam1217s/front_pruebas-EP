@@ -3,33 +3,33 @@
     <div class="grid">
       <Card
         title="Datos Personales"
-        subtitle="Visualización de datos y cambios "
-        imgSrc="/public/Monitoria.jpg"
-        route="/vista"
+        subtitle="Visualización de datos y cambios"
+        imgSrc="/Monitoria.jpg"
+        route="/aprendiz/datos-personales"
         color="#5db82f"
         textColor="white"
       />
       <Card
-        title="Bitacoras y Documentos"
+        title="Bitácoras y Documentos"
         subtitle="Consulta, Registro y Visualización"
-        imgSrc="/public/Almacenamiento.jpg"
-        route="/vista"
+        imgSrc="/Almacenamiento.jpg"
+        route="/aprendiz/bitacoras"
         color="#5db82f"
         textColor="white"
       />
       <Card
         title="Etapa Productiva"
         subtitle="Registro de Etapa Productiva"
-        imgSrc="/public/Pasantia_ONG.jpg"
-        route="/vista"
+        imgSrc="/Pasantia_ONG.jpg"
+        route="/aprendiz/registro"
         color="#5db82f"
         textColor="white"
       />
       <Card
         title="Proceso de EP"
         subtitle="Visualización del Proceso de EP"
-        imgSrc="/public/pyme.jpg"
-        route="/vista"
+        imgSrc="/pyme.jpg"
+        route="/aprendiz/seguimiento"
         color="#5db82f"
         textColor="white"
       />
@@ -38,7 +38,8 @@
 </template>
 
 <script setup>
-import Card from '../components/card.vue'
+// ✅ CORRECTO: Desde views/aprendiz/ son 2 niveles arriba
+import Card from '../../components/card.vue'
 </script>
 
 <style scoped>
@@ -46,16 +47,32 @@ import Card from '../components/card.vue'
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  padding: 0px;
+  padding: 20px;
   justify-items: center;
   align-items: center;
 }
+
 .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  max-width: 100vw;
-  max-height: calc(100vh - 180px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 180px);
   overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+  }
 }
 </style>

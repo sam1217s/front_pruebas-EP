@@ -1,12 +1,15 @@
 <template>
-    <div class="center">
+  <div class="center">
     <div class="grid">
+      <!-- ============================================ -->
+      <!-- CARDS PARA ADMINISTRADOR -->
+      <!-- ============================================ -->
       <Card
         v-if="role === 'ADMINISTRADOR'"
         title="SGVA"
         subtitle="Consulta, Registro y Visualización de empresas"
-        imgSrc="/public/Monitoria.jpg"
-        route="/vista"
+        imgSrc="/Monitoria.jpg"
+        route="/admin/empresas"
         color="#5db82f"
         textColor="white"
       />
@@ -14,8 +17,8 @@
         v-if="role === 'ADMINISTRADOR'"
         title="Vista de Documentos"
         subtitle="Consulta y Visualización"
-        imgSrc="/public/Almacenamiento.jpg"
-        route="/vista"
+        imgSrc="/Almacenamiento.jpg"
+        route="/admin/documentos"
         color="#5db82f"
         textColor="white"
       />
@@ -23,8 +26,8 @@
         v-if="role === 'ADMINISTRADOR'"
         title="Instructores"
         subtitle="Consulta Instructores"
-        imgSrc="/public/Pasantia_ONG.jpg"
-        route="/vista"
+        imgSrc="/Pasantia_ONG.jpg"
+        route="/admin/instructores"
         color="#5db82f"
         textColor="white"
       />
@@ -32,44 +35,48 @@
         v-if="role === 'ADMINISTRADOR'"
         title="Aprendices"
         subtitle="Consulta y Visualización"
-        imgSrc="/public/pyme.jpg"
-        route="/vista"
+        imgSrc="/pyme.jpg"
+        route="/admin/aprendices"
         color="#5db82f"
         textColor="white"
       />
       <Card
         v-if="role === 'ADMINISTRADOR'"
-        title="Parametros"
-        subtitle="Consulta Parametros"
-        imgSrc="/public/Pasantia_ONG.jpg"
-        route="/vista"
+        title="Modalidades"
+        subtitle="Consulta Modalidades"
+        imgSrc="/Pasantia_ONG.jpg"
+        route="/admin/modalidades"
         color="#5db82f"
         textColor="white"
       />
       <Card
         v-if="role === 'ADMINISTRADOR'"
-        title="Reportes"
-        subtitle="Consulta y Visualización de Reportes"
-        imgSrc="/public/pyme.jpg"
-        route="/vista"
+        title="Validar Solicitudes"
+        subtitle="Validación de solicitudes de EP"
+        imgSrc="/pyme.jpg"
+        route="/admin/validar-solicitudes"
+        color="#5db82f"
+        textColor="white"
+      />
+
+      <!-- ============================================ -->
+      <!-- CARDS PARA INSTRUCTOR -->
+      <!-- ============================================ -->
+      <Card
+        v-if="role === 'INSTRUCTOR'"
+        title="Mis Aprendices"
+        subtitle="Consultar mis aprendices asignados"
+        imgSrc="/Monitoria.jpg"
+        route="/instructor/mis-aprendices"
         color="#5db82f"
         textColor="white"
       />
       <Card
         v-if="role === 'INSTRUCTOR'"
-        title="Informe Personal"
-        subtitle="Consultar mi informacion y Horas"
-        imgSrc="/public/Monitoria.jpg"
-        route="/vista"
-        color="#5db82f"
-        textColor="white"
-      />
-      <Card
-      v-if="role === 'INSTRUCTOR'"
         title="Seguimientos"
         subtitle="Proceso de documentos de seguimiento"
-        imgSrc="/public/Almacenamiento.jpg"
-        route="/vista"
+        imgSrc="/Almacenamiento.jpg"
+        route="/instructor/seguimientos"
         color="#5db82f"
         textColor="white"
       />
@@ -77,131 +84,140 @@
         v-if="role === 'INSTRUCTOR'"
         title="Bitácoras"
         subtitle="Procedimiento de subida de documentos de bitácoras"
-        imgSrc="/public/Pasantia_ONG.jpg"
-        route="/vista"
+        imgSrc="/Pasantia_ONG.jpg"
+        route="/instructor/bitacoras"
+        color="#5db82f"
+        textColor="white"
+      />
+
+      <!-- ============================================ -->
+      <!-- CARDS PARA APRENDIZ -->
+      <!-- ============================================ -->
+      <Card
+        v-if="role === 'APRENDIZ'"
+        title="Registro EP"
+        subtitle="Registrar Etapa Productiva"
+        imgSrc="/Monitoria.jpg"
+        route="/aprendiz/registro"
         color="#5db82f"
         textColor="white"
       />
       <Card
-        v-if="role === 'INSTRUCTOR'"
-        title="Lista de Aprendices"
-        subtitle="Consultar mis aprendices asignados"
-        imgSrc="/public/pyme.jpg"
-        route="/vista"
+        v-if="role === 'APRENDIZ'"
+        title="Mis Registros"
+        subtitle="Consultar mis registros de EP"
+        imgSrc="/Almacenamiento.jpg"
+        route="/aprendiz/mis-registros"
         color="#5db82f"
         textColor="white"
       />
       <Card
-        v-if="role === 'INSTRUCTOR'"
-        title="Historial"
-        subtitle="Consultar mi actividad en el sitio"
-        imgSrc="/public/Pasantia_ONG.jpg"
-        route="/vista"
+        v-if="role === 'APRENDIZ'"
+        title="Seguimiento"
+        subtitle="Ver mi seguimiento"
+        imgSrc="/Pasantia_ONG.jpg"
+        route="/aprendiz/seguimiento"
         color="#5db82f"
         textColor="white"
       />
       <Card
-        v-if="role === 'INSTRUCTOR'"
-        title="Novedades"
-        subtitle="Procesos Disciplinarios"
-        imgSrc="/public/pyme.jpg"
-        route="/vista"
+        v-if="role === 'APRENDIZ'"
+        title="Documentos"
+        subtitle="Mis documentos cargados"
+        imgSrc="/pyme.jpg"
+        route="/aprendiz/documentos"
         color="#5db82f"
         textColor="white"
       />
     </div>
-  </div>    
+
+    <!-- Mensaje si no hay rol -->
+    <div v-if="!role" class="no-role-message">
+      <q-icon name="warning" size="48px" color="warning" />
+      <div class="text-h6 q-mt-md">No se pudo identificar tu rol</div>
+      <q-btn 
+        color="primary" 
+        label="Ir al Login" 
+        class="q-mt-md"
+        @click="$router.push('/login')"
+      />
+    </div>
+  </div>
 </template>
+
 <script setup>
-import Card from '../components/card.vue';
-import { ref, onMounted } from 'vue'
+import Card from '../components/card.vue'
+import { computed, onMounted } from 'vue'
+import { useAuthStore } from '../stores/authStore.js'
+import { useRouter } from 'vue-router'
 
-const role = ref('') 
+const authStore = useAuthStore()
+const router = useRouter()
 
-function parseJwt (token) {
-  try {
-    const base64Url = token.split('.')[1]
-    if (!base64Url) return null
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/')
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
-    )
-    return JSON.parse(jsonPayload)
-  } catch (e) {
-    return null
-  }
-}
+// Usar el rol del store directamente
+const role = computed(() => authStore.role)
 
 onMounted(() => {
-  try {
-    const storedUserRole = localStorage.getItem('userRole') || localStorage.getItem('role') || localStorage.getItem('selectedRole')
-    console.log('[dashboard] storedUserRole:', storedUserRole)
-    if (storedUserRole) {
-      role.value = String(storedUserRole).toUpperCase()
-      console.log('[dashboard] role from localStorage userRole:', role.value)
-      return
-    }
-
-    const rawUser = localStorage.getItem('user')
-    console.log('[dashboard] rawUser:', rawUser)
-    if (rawUser) {
-      try {
-        const u = JSON.parse(rawUser)
-        const candidate = u.role || u.rol || u.roleName || u.role_type || u.type || u.firstRole
-        if (candidate) {
-          role.value = String(candidate).toUpperCase()
-          console.log('[dashboard] role from user object:', role.value)
-          return
-        }
-      } catch (e) {
-        console.warn('[dashboard] user parse error', e)
-      }
-    }
-
-    const token = localStorage.getItem('token')
-    console.log('[dashboard] token present:', !!token)
-    if (token) {
-      const payload = parseJwt(token)
-      console.log('[dashboard] token payload:', payload)
-      if (payload) {
-        const candidate =
-          payload.role ||
-          payload.rol ||
-          (payload.uid && (payload.uid.role || payload.uid.rol)) ||
-          (payload.user && (payload.user.role || payload.user.rol))
-        if (candidate) {
-          role.value = String(candidate).toUpperCase()
-          console.log('[dashboard] role from token:', role.value)
-          return
-        }
-      }
-    }
-
-    role.value = ''
-    console.log('[dashboard] role fallback empty')
-  } catch (err) {
-    console.error('Error obteniendo rol:', err)
+  console.log('[Inicio.vue] Rol del usuario:', role.value)
+  console.log('[Inicio.vue] Usuario autenticado:', authStore.isAuthenticated)
+  
+  // Si no hay rol, redirigir al login después de 2 segundos
+  if (!role.value) {
+    console.warn('[Inicio.vue] No se encontró rol, redirigiendo al login...')
+    setTimeout(() => {
+      router.push('/login')
+    }, 2000)
   }
 })
 </script>
+
 <style scoped>
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
-  padding: 0px;
+  padding: 20px;
   justify-items: center;
   align-items: center;
 }
+
 .center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  max-width: 100vw;
-  max-height: calc(100vh - 180px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 180px);
   overflow-y: auto;
+  padding: 20px;
+}
+
+.no-role-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+/* Responsive para tablets */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .center {
+    padding: 12px;
+  }
 }
 </style>

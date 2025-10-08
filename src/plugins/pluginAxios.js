@@ -3,7 +3,7 @@
 const token = JSON.parse(localStorage.getItem('pruebas')) || '';
 
 export const apiClient = axios.create({
-    baseURL: 'https://repfora-ep-backend.onrender.com',
+    baseURL: 'https://repfora-ep-backend.onrender.com/api',
     headers: {
         "x-token": token.token
     }

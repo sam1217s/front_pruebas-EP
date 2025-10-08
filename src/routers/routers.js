@@ -6,19 +6,20 @@ import MainLayout from '../layouts/MainLayout.vue'
 import Login from '../views/Login.vue'
 import Inicio from '../views/Inicio.vue'
 
-// Vistas de Administrador (crear estas vistas según necesites)
-const AdminDashboard = () => import('../views/admin/Dashboard.vue')
-const AdminUsuarios = () => import('../views/admin/Usuarios.vue')
-const AdminRegistros = () => import('../views/admin/Registros.vue')
+// Vistas de Administrador (las que SÍ EXISTEN)
+const AdminAprendices = () => import('../views/admin/Aprendices.vue')
+const AdminEmpresas = () => import('../views/admin/Empresas.vue')
+const AdminFichas = () => import('../views/admin/Fichas.vue')
+const AdminModalidades = () => import('../views/admin/Modalidades.vue')
+const AdminValidarSolicitudes = () => import('../views/admin/ValidarSolicitudes.vue')
 
-// Vistas de Instructor
-const InstructorDashboard = () => import('../views/instructor/Dashboard.vue')
-const InstructorAprendices = () => import('../views/instructor/Aprendices.vue')
+// Vistas de Instructor (las que SÍ EXISTEN)
+const InstructorMisAprendices = () => import('../views/instructor/MisAprendices.vue')
 
-// Vistas de Aprendiz
-const AprendizRegistro = () => import('../views/aprendiz/Registro.vue')
-const AprendizProyecto = () => import('../views/aprendiz/Proyecto.vue')
-const AprendizSeguimiento = () => import('../views/aprendiz/Seguimiento.vue')
+// Vistas de Aprendiz (las que SÍ EXISTEN)
+const AprendizInicioAprendiz = () => import('../views/aprendiz/inicioAprendiz.vue')
+const AprendizMisRegistros = () => import('../views/aprendiz/MisRegistros.vue')
+const AprendizRegistroEP = () => import('../views/aprendiz/RegistroEP.vue')
 
 const routes = [
   {
@@ -42,55 +43,70 @@ const routes = [
         component: Inicio,
         meta: { requiresAuth: true }
       },
-      // Rutas de Administrador
+      
+      // ============================================
+      // Rutas de ADMINISTRADOR
+      // ============================================
       {
-        path: '/admin/dashboard',
-        name: 'AdminDashboard',
-        component: AdminDashboard,
+        path: '/admin/aprendices',
+        name: 'AdminAprendices',
+        component: AdminAprendices,
         meta: { requiresAuth: true, role: 'ADMINISTRADOR' }
       },
       {
-        path: '/admin/usuarios',
-        name: 'AdminUsuarios',
-        component: AdminUsuarios,
+        path: '/admin/empresas',
+        name: 'AdminEmpresas',
+        component: AdminEmpresas,
         meta: { requiresAuth: true, role: 'ADMINISTRADOR' }
       },
       {
-        path: '/admin/registros',
-        name: 'AdminRegistros',
-        component: AdminRegistros,
+        path: '/admin/fichas',
+        name: 'AdminFichas',
+        component: AdminFichas,
         meta: { requiresAuth: true, role: 'ADMINISTRADOR' }
       },
-      // Rutas de Instructor
       {
-        path: '/instructor/dashboard',
-        name: 'InstructorDashboard',
-        component: InstructorDashboard,
+        path: '/admin/modalidades',
+        name: 'AdminModalidades',
+        component: AdminModalidades,
+        meta: { requiresAuth: true, role: 'ADMINISTRADOR' }
+      },
+      {
+        path: '/admin/validar-solicitudes',
+        name: 'AdminValidarSolicitudes',
+        component: AdminValidarSolicitudes,
+        meta: { requiresAuth: true, role: 'ADMINISTRADOR' }
+      },
+      
+      // ============================================
+      // Rutas de INSTRUCTOR
+      // ============================================
+      {
+        path: '/instructor/mis-aprendices',
+        name: 'InstructorMisAprendices',
+        component: InstructorMisAprendices,
         meta: { requiresAuth: true, role: 'INSTRUCTOR' }
       },
+      
+      // ============================================
+      // Rutas de APRENDIZ
+      // ============================================
       {
-        path: '/instructor/aprendices',
-        name: 'InstructorAprendices',
-        component: InstructorAprendices,
-        meta: { requiresAuth: true, role: 'INSTRUCTOR' }
+        path: '/aprendiz/inicio',
+        name: 'AprendizInicio',
+        component: AprendizInicioAprendiz,
+        meta: { requiresAuth: true, role: 'APRENDIZ' }
       },
-      // Rutas de Aprendiz
+      {
+        path: '/aprendiz/mis-registros',
+        name: 'AprendizMisRegistros',
+        component: AprendizMisRegistros,
+        meta: { requiresAuth: true, role: 'APRENDIZ' }
+      },
       {
         path: '/aprendiz/registro',
         name: 'AprendizRegistro',
-        component: AprendizRegistro,
-        meta: { requiresAuth: true, role: 'APRENDIZ' }
-      },
-      {
-        path: '/aprendiz/proyecto',
-        name: 'AprendizProyecto',
-        component: AprendizProyecto,
-        meta: { requiresAuth: true, role: 'APRENDIZ' }
-      },
-      {
-        path: '/aprendiz/seguimiento',
-        name: 'AprendizSeguimiento',
-        component: AprendizSeguimiento,
+        component: AprendizRegistroEP,
         meta: { requiresAuth: true, role: 'APRENDIZ' }
       }
     ]
@@ -121,7 +137,7 @@ router.beforeEach((to, from, next) => {
     } else if (requiredRole && authStore.role !== requiredRole) {
       // Está autenticado pero no tiene el rol correcto
       console.warn(`Acceso denegado. Rol requerido: ${requiredRole}, Rol actual: ${authStore.role}`)
-      next('/inicio') // O a una página de "acceso denegado"
+      next('/inicio')
     } else {
       // Todo bien, permitir acceso
       next()
