@@ -1,5 +1,7 @@
 import { apiClient } from '../plugins/pluginAxios.js'
 
+export { apiClient }
+
 // GET - Obtener datos
 export async function getData(url) {
   try {
@@ -54,3 +56,5 @@ export async function patchData(url, data) {
     throw error
   }
 }
+
+

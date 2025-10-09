@@ -34,7 +34,7 @@
           </q-select>
 
           <!-- Formularios dinámicos según el rol -->
-          <q-form ref="myform" @submit="presumbit" v-if="selectedRole" class=" form-container">
+          <q-form ref="myform" @submit="onSubmit" v-if="selectedRole" class=" form-container">
             <!-- Formulario para Administrador -->
             <template v-if="selectedRole === 'ADMINISTRADOR'">
               <q-input filled v-model="form.correo" label="CORREO" type="email" class="rounded-select"
@@ -118,7 +118,7 @@ const showPassword = ref(false)
 const selectedRole = ref(null)
 const myform = ref(null)
 const notify = useNotifications()
-const AuthStore = useAuthStore()
+const authStore = useAuthStore()
 
 // Opciones para el selector de rol
 const roleOptions = [
@@ -146,63 +146,88 @@ const form = ref({
 
 const onSubmit = async () => {
   loading.value = true
+  
   try {
     let response;
     switch (selectedRole.value) {
       case 'ADMINISTRADOR':
-        response = await postData('/users/login', {
-          role: 'ETAPA PRODUCTIVA VIRTUAL',
-          email: form.value.correo,
-          password: form.value.contrasena
-        });
+        try {
+          response = await postData('/users/login', {
+            role: 'ETAPA PRODUCTIVA VIRTUAL',
+            email: form.value.correo,
+            password: form.value.contrasena
+          });
+        } catch (error) {
+          console.error('Error en login de administrador:', error);
+          const errorMessage = error.response?.data?.errors?.[0] ||  'Error en el inicio de sesión de administrador';
+          notify.error(errorMessage);
+          return;
+        }
         break;
-      case 'INSTRUCTOR':
-        response = await postData('/instructors/login', {
-          password: form.value.contrasena,
-          documentType: form.value.tipoDocumento,
-          documentNumber: form.value.documento
-        });
+        
+      case 'INSTRUCTOR':      
+        try {
+          response = await postData('/instructors/login', {
+            password: form.value.contrasena,
+            documentType: form.value.tipoDocumento,
+            document: form.value.documento
+          });
+        } catch (error) {
+          console.error('Error en login de instructor:', error);
+          const errorMessage = error.response?.data?.errors?.[0] || 'Error en el inicio de sesión de instructor';
+          notify.error(errorMessage);
+          return;
+        }
         break;
+        
       case 'APRENDIZ':
-        response = await postData('/apprentices/login', {
-          password: form.value.contrasena,
-          documentType: form.value.tipoDocumento,
-          documentNumber: form.value.documento
-        });
+        try {
+          response = await postData('/apprentices/login', {
+            password: form.value.contrasena,
+            documentType: form.value.tipoDocumento,
+            documentNumber: form.value.documento
+          });
+        } catch (error) {
+          console.error('Error en login de aprendiz:', error);
+          const errorMessage = error.response?.data?.errors?.[0] || 'Error en el inicio de sesión de aprendiz';
+          notify.error(errorMessage);
+          return;
+        }
         break;
+        
       default:
-        throw new Error('Rol no válido');
+        notify.error('Por favor seleccione un rol válido');
+        return;
     }
 
+    if (response && response.token) {
+      authStore.setToken(response.token);
+      authStore.setUser({
+        role: selectedRole.value, 
+        name: response.name, 
+        email: response.email
+      });
 
-    AuthStore.setToken(response.token)
-    AuthStore.setUser({role: selectedRole.value, name: response.name, email: response.email})
+      switch (selectedRole.value) {
+        case 'ADMINISTRADOR':
+        case 'INSTRUCTOR':
+          router.push('/app/inicio');
+          break;
+        case 'APRENDIZ':
+          router.push('/app/aprendiz/inicio');
+          break;
+      }
 
-    // Redireccionar según el rol
-    switch (selectedRole.value) {
-      case 'ADMINISTRADOR':
-      case 'INSTRUCTOR':
-        router.push('/app/inicio');
-        break;
-      case 'APRENDIZ':
-        router.push('/app/aprendiz/inicio');
-        break;
+      notify.success(response.msg || 'Inicio de sesión exitoso');
+    } else {
+      notify.error('Respuesta del servidor inválida');
     }
-
-    notify.success(response.msg)
 
   } catch (error) {
-    console.log(error);
-    notify.error(error.response.data.errors[0])
+    console.error('Error general en onSubmit:', error);
+    notify.error('Error inesperado en el sistema');
   } finally {
-    loading.value = false
-  }
-}
-
-const presumbit = () => {
-  let valid = myform.value.validate()
-  if (valid) {
-    onSubmit()
+    loading.value = false;
   }
 }
 </script>

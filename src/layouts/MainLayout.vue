@@ -111,6 +111,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
+import { useAuthStore } from '../stores/authStore.js'
 
 const showMorph = ref(false)
 const firstName = ref('')
@@ -118,6 +119,7 @@ const lastName = ref('')
 const role = ref('')
 const router = useRouter()
 const $q = useQuasar()
+const authStore = useAuthStore()
 
 const showNotifications = ref(false)
 const notifications = ref([
@@ -220,13 +222,26 @@ onMounted(() => {
 })
 
 function logout() {
-  localStorage.removeItem('auth')
-  localStorage.removeItem('user')
-  localStorage.removeItem('userRole')
-  localStorage.removeItem('role')
-  localStorage.removeItem('selectedRole')
-  showMorph.value = false
-  router.push('/')
+  try {
+    authStore.clearAuth()
+    
+    $q.notify({
+      message: 'Sesión cerrada correctamente',
+      color: 'positive',
+      icon: 'logout'
+    })
+    
+    showMorph.value = false
+    
+    router.push('/')
+  } catch (error) {
+    console.error('Error al cerrar sesión:', error)
+    $q.notify({
+      message: 'Error al cerrar sesión',
+      color: 'negative',
+      icon: 'error'
+    })
+  }
 }
 </script>
 

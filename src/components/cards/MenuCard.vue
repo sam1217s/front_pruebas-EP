@@ -2,7 +2,7 @@
   <q-card class="my-card" @click="router.push(route)">
     <q-item :style="{ backgroundColor: color }">
       <q-item-section>
-        <q-item-label :style="{ textAlign: 'center', color: textColor }">
+        <q-item-label :style="{ textAlign: 'center', color: textColor, fontSize: '1.2em', fontWeight: 'bold' }">
           {{ title }}
         </q-item-label>
         <q-item-label caption :style="{ textAlign: 'center', color: textColor }">
