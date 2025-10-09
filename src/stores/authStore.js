@@ -16,7 +16,7 @@ export const useAuthStore = defineStore("auth", () => {
     
     function setUser(userData) {
         user.value = userData
-        role.value = userData?.role || userData?.tipo || ""
+        role.value = userData?.role || ""
     }
     
     function setAuth(tokenValue, userData) {
@@ -29,7 +29,6 @@ export const useAuthStore = defineStore("auth", () => {
         user.value = null
         role.value = ""
         isAuthenticated.value = false
-        localStorage.removeItem('pruebas')
     }
     
     // Getters

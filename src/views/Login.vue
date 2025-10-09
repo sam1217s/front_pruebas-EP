@@ -2,10 +2,11 @@
   <q-layout view="hHh lpR fFf">
     <!-- Header con logo SENA y título -->
     <q-header elevated class="text-white" style="background-color: #39a900; height: 90px;">
-      <div style="position: relative; height: 90px; width: 100%; display: flex; align-items: center; justify-content: center;">
+      <div
+        style="position: relative; height: 90px; width: 100%; display: flex; align-items: center; justify-content: center;">
         <q-avatar size="90px"
           style="position: absolute; left: 0; top: 0; bottom: 0; margin: auto 0 auto 16px; z-index: 5; background: #5EB930; display: flex; align-items: center; justify-content: center;">
-          <img src="/logo-sena.png" style="height: 90px; width: auto; background-color: #39a900;" />
+          <img src="/src/assets/logoSENABlanco.png" style="height: 90px; width: auto; background-color: #39a900;" />
         </q-avatar>
         <span style="font-size: 3rem; font-weight: bold; line-height: 80px;">REPFORA EP</span>
       </div>
@@ -16,22 +17,15 @@
         <q-card class="q-pa-md login-card">
           <!-- Header de la tarjeta -->
           <div class="column items-center" style="width: 100%; margin-bottom: 1rem;">
-            <img src="/logo-sena.png" alt="Logo SENA" style="width: 80px; height: auto; margin-bottom: 12px;">
+            <img src="/src/assets/logo-sena.png" alt="Logo SENA"
+              style="width: 80px; height: auto; margin-bottom: 12px;">
             <div class="text-h5 text-bold text-center" style="color: #111;">INGRESO A REPFORA EP</div>
           </div>
 
           <!-- Selector de rol -->
-          <q-select
-            filled
-            v-model="selectedRole"
-            :options="roleOptions"
-            option-label="label"
-            option-value="value"
-            emit-value
-            label="SELECCIONA TU ROL"
-            class="q-mb-md rounded-select"
-            style="width: 100%; max-width: 500px; font-size: 1.1rem;"
-          >
+          <q-select filled v-model="selectedRole" :options="roleOptions" option-label="label" option-value="value"
+            emit-value label="SELECCIONA TU ROL" class="q-mb-md rounded-select"
+            style="width: 100%; max-width: 500px; font-size: 1.1rem;">
             <template v-slot:prepend>
               <span class="material-symbols-outlined" style="font-size: 28px; color: #888;">
                 identity_platform
@@ -39,109 +33,46 @@
             </template>
           </q-select>
 
-          <!-- Formulario de login -->
-          <q-form @submit.prevent="onSubmit" v-if="selectedRole" class="q-gutter-md form-container">
-            
-            <!-- ============================================ -->
-            <!-- FORMULARIO PARA ADMINISTRADOR -->
-            <!-- ============================================ -->
+          <!-- Formularios dinámicos según el rol -->
+          <q-form ref="myform" @submit="presumbit" v-if="selectedRole" class=" form-container">
+            <!-- Formulario para Administrador -->
             <template v-if="selectedRole === 'ADMINISTRADOR'">
-              <q-select
-                filled
-                v-model="form.roleAdmin"
-                :options="roleAdminOptions"
-                label="ROL DE COORDINADOR"
-                class="rounded-select"
-                :rules="[val => !!val || 'Selecciona un rol']"
-              >
-                <template v-slot:prepend>
-                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">admin_panel_settings</span>
-                </template>
-              </q-select>
-
-              <q-input 
-                filled 
-                v-model="form.correo" 
-                label="CORREO ELECTRÓNICO"
-                type="email"
-                :rules="[val => !!val || 'El correo es requerido']"
-                class="rounded-select"
-              >
+              <q-input filled v-model="form.correo" label="CORREO" type="email" class="rounded-select"
+                :rules="[val => !!val || 'El correo es requerido', val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val) || 'Formato de correo invalido']">
                 <template v-slot:prepend>
                   <span class="material-symbols-outlined" style="font-size: 24px; color:#888">mail</span>
                 </template>
               </q-input>
             </template>
 
-            <!-- ============================================ -->
-            <!-- FORMULARIO PARA INSTRUCTOR -->
-            <!-- ============================================ -->
-            <template v-if="selectedRole === 'INSTRUCTOR'">
-              <q-input 
-                filled 
-                v-model="form.documento" 
-                label="NÚMERO DE DOCUMENTO"
-                type="text"
-                :rules="[val => !!val || 'El documento es requerido']"
-                class="rounded-select"
-              >
+            <!-- Formulario para Instructor y Aprendiz -->
+            <template v-if="selectedRole === 'INSTRUCTOR' || selectedRole === 'APRENDIZ'">
+              <q-select v-model="form.tipoDocumento" :options="tiposDocumento" option-label="label" option-value="value"
+                emit-value map-options label="TIPO DE DOCUMENTO" filled class="rounded-select"
+                :rules="[val => !!val || 'El tipo de documento es requerido']">
                 <template v-slot:prepend>
                   <span class="material-symbols-outlined" style="font-size: 24px; color:#888">badge</span>
-                </template>
-              </q-input>
-            </template>
-
-            <!-- ============================================ -->
-            <!-- FORMULARIO PARA APRENDIZ -->
-            <!-- ============================================ -->
-            <template v-if="selectedRole === 'APRENDIZ'">
-              <q-select
-                filled
-                v-model="form.tipoDocumento"
-                :options="tipoDocumentoOptions"
-                label="TIPO DE DOCUMENTO"
-                class="rounded-select"
-                :rules="[val => !!val || 'Selecciona el tipo de documento']"
-              >
-                <template v-slot:prepend>
-                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">assignment_ind</span>
                 </template>
               </q-select>
 
-              <q-input 
-                filled 
-                v-model="form.documento" 
-                label="NÚMERO DE DOCUMENTO"
-                type="text"
-                :rules="[val => !!val || 'El documento es requerido']"
-                class="rounded-select"
-              >
+              <q-input filled v-model="form.documento" label="NÚMERO DE DOCUMENTO" type="text" class="rounded-select"
+                :rules="[val => !!val || 'El número de documento es requerido']">
                 <template v-slot:prepend>
-                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">badge</span>
+                  <span class="material-symbols-outlined" style="font-size: 24px; color:#888">123</span>
                 </template>
               </q-input>
+
             </template>
 
-            <!-- ============================================ -->
-            <!-- CONTRASEÑA (común para todos) -->
-            <!-- ============================================ -->
-            <q-input 
-              filled 
-              v-model="form.password" 
-              label="CONTRASEÑA"
-              :type="showPassword ? 'text' : 'password'"
-              :rules="[val => !!val || 'La contraseña es requerida']"
-              class="rounded-select"
-            >
+            <!-- Campo de contraseña común para todos -->
+            <q-input filled v-model="form.contrasena" label="CONTRASEÑA" :type="showPassword ? 'text' : 'password'"
+              class="rounded-select" :rules="[val => !!val || 'La contraseña es requerida']">
               <template v-slot:prepend>
                 <span class="material-symbols-outlined" style="font-size: 24px; color:#888">lock</span>
               </template>
               <template v-slot:append>
-                <q-icon 
-                  :name="showPassword ? 'visibility' : 'visibility_off'" 
-                  class="cursor-pointer"
-                  @click="showPassword = !showPassword"
-                />
+                <q-icon :name="showPassword ? 'visibility' : 'visibility_off'" class="cursor-pointer"
+                  @click="showPassword = !showPassword" />
               </template>
             </q-input>
 
@@ -152,16 +83,7 @@
 
             <!-- Botón de ingreso -->
             <div class="row justify-center" style="width: 100%; padding-top: 32px;">
-              <q-btn
-                label="INGRESAR"
-                type="submit"
-                color="primary"
-                size="lg"
-                :loading="loading"
-                :disable="loading"
-                class="wide-btn"
-                style="width: 100%; max-width: 300px; background-color: #39a900;"
-              />
+              <Button1 label="INGRESAR" type="submit" :loading="loading" customClass="wide-btn" />
             </div>
           </q-form>
         </q-card>
@@ -182,228 +104,165 @@
 </template>
 
 <script setup>
+import Button1 from '../components/button-1.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { postData } from '../services/apiClient.js'
 import { useNotifications } from '../composables/useNotifications.js'
 import { useAuthStore } from '../stores/authStore.js'
-import { apiClient } from '../plugins/pluginAxios.js'
 
 const router = useRouter()
-const authStore = useAuthStore()
-const { success, error, warning } = useNotifications()
 
-// Estado
-const selectedRole = ref('')
-const showPassword = ref(false)
 const loading = ref(false)
+const showPassword = ref(false)
+const selectedRole = ref(null)
+const myform = ref(null)
+const notify = useNotifications()
+const AuthStore = useAuthStore()
 
-// Opciones de roles
+// Opciones para el selector de rol
 const roleOptions = [
   { label: 'Administrador', value: 'ADMINISTRADOR' },
   { label: 'Instructor', value: 'INSTRUCTOR' },
   { label: 'Aprendiz', value: 'APRENDIZ' }
 ]
 
-// Opciones para administrador
-const roleAdminOptions = [
-  'ETAPA PRODUCTIVA VIRTUAL',
-  'ETAPA PRODUCTIVA PRESENCIAL'
+// Opciones para tipos de documento
+const tiposDocumento = [
+  { label: 'Cédula de Ciudadanía', value: 'CC' },
+  { label: 'Tarjeta de Identidad', value: 'TI' },
+  { label: 'Cédula de Extranjería', value: 'CE' },
+  { label: 'PEP', value: 'PEP' },
+  { label: 'Permiso por Protección Temporal', value: 'PPT' }
 ]
 
-// Opciones para tipo de documento
-const tipoDocumentoOptions = ['CC', 'TI', 'CE', 'Pasaporte']
-
-// Formulario
 const form = ref({
-  correo: '',
+  tipoDocumento: '',
   documento: '',
-  tipoDocumento: 'CC',
-  roleAdmin: 'ETAPA PRODUCTIVA VIRTUAL',
-  password: ''
+  correo: '',
+  contrasena: ''
 })
 
-// Función de login ACTUALIZADA según la API
-async function onSubmit() {
-  // Validar que se haya seleccionado un rol
-  if (!selectedRole.value) {
-    warning('Selecciona un rol', 'Debes elegir tu tipo de usuario')
-    return
-  }
 
-  // Validar campos según el rol
-  if (selectedRole.value === 'ADMINISTRADOR') {
-    if (!form.value.correo) {
-      warning('Campo requerido', 'Ingresa tu correo electrónico')
-      return
-    }
-    if (!form.value.roleAdmin) {
-      warning('Campo requerido', 'Selecciona tu rol de coordinador')
-      return
-    }
-  }
-
-  if (selectedRole.value === 'INSTRUCTOR' && !form.value.documento) {
-    warning('Campo requerido', 'Ingresa tu número de documento')
-    return
-  }
-
-  if (selectedRole.value === 'APRENDIZ') {
-    if (!form.value.tipoDocumento) {
-      warning('Campo requerido', 'Selecciona el tipo de documento')
-      return
-    }
-    if (!form.value.documento) {
-      warning('Campo requerido', 'Ingresa tu número de documento')
-      return
-    }
-  }
-
-  if (!form.value.password) {
-    warning('Campo requerido', 'Ingresa tu contraseña')
-    return
-  }
-
+const onSubmit = async () => {
   loading.value = true
-
   try {
-    let endpoint = ''
-    let payload = {}
-
-    // ✅ CONSTRUIR ENDPOINT Y PAYLOAD SEGÚN LA DOCUMENTACIÓN DE LA API
-    if (selectedRole.value === 'ADMINISTRADOR') {
-      endpoint = 'users/login'
-      payload = {
-        role: form.value.roleAdmin,
-        email: form.value.correo,
-        password: form.value.password
-      }
-    } else if (selectedRole.value === 'INSTRUCTOR') {
-      endpoint = 'instructors/login'
-      payload = {
-        document: form.value.documento,
-        password: form.value.password
-      }
-    } else if (selectedRole.value === 'APRENDIZ') {
-      endpoint = 'apprentices/login'
-      payload = {
-        documentType: form.value.tipoDocumento,
-        documentNumber: form.value.documento,
-        password: form.value.password
-      }
+    let response;
+    switch (selectedRole.value) {
+      case 'ADMINISTRADOR':
+        response = await postData('/users/login', {
+          role: 'ETAPA PRODUCTIVA VIRTUAL',
+          email: form.value.correo,
+          password: form.value.contrasena
+        });
+        break;
+      case 'INSTRUCTOR':
+        response = await postData('/instructors/login', {
+          password: form.value.contrasena,
+          documentType: form.value.tipoDocumento,
+          documentNumber: form.value.documento
+        });
+        break;
+      case 'APRENDIZ':
+        response = await postData('/apprentices/login', {
+          password: form.value.contrasena,
+          documentType: form.value.tipoDocumento,
+          documentNumber: form.value.documento
+        });
+        break;
+      default:
+        throw new Error('Rol no válido');
     }
 
-    console.log('🔐 Intentando login...')
-    console.log('📍 Endpoint:', endpoint)
-    console.log('📦 Payload:', payload)
 
-    // Hacer la petición de login
-    const response = await postData(endpoint, payload)
+    AuthStore.setToken(response.token)
+    AuthStore.setUser({role: selectedRole.value, name: response.name, email: response.email})
 
-    console.log('✅ Response:', response)
-
-    if (response.token) {
-      // PASO 1: Guardar en localStorage
-      localStorage.setItem('pruebas', JSON.stringify({ 
-        token: response.token 
-      }))
-      
-      // PASO 2: Actualizar headers de axios
-      apiClient.defaults.headers['x-token'] = response.token
-      
-      // PASO 3: Guardar en el store
-      authStore.setAuth(response.token, {
-        name: response.name || response.firstName || 'Usuario',
-        email: response.email || form.value.correo,
-        role: selectedRole.value,
-        ...response
-      })
-      
-      success('¡Bienvenido!', `Inicio de sesión exitoso como ${selectedRole.value}`)
-      
-      // PASO 4: Limpiar formulario
-      form.value = {
-        correo: '',
-        documento: '',
-        tipoDocumento: 'CC',
-        roleAdmin: 'ETAPA PRODUCTIVA VIRTUAL',
-        password: ''
-      }
-      
-      // PASO 5: Redireccionar al inicio
-      setTimeout(() => {
-        router.push('/inicio')
-      }, 500)
-    } else {
-      error('Error en el login', 'No se recibió el token de autenticación')
+    // Redireccionar según el rol
+    switch (selectedRole.value) {
+      case 'ADMINISTRADOR':
+      case 'INSTRUCTOR':
+        router.push('/app/inicio');
+        break;
+      case 'APRENDIZ':
+        router.push('/app/aprendiz/inicio');
+        break;
     }
-  } catch (err) {
-    console.error('❌ Error en login:', err)
-    
-    // Mostrar mensaje de error más específico
-    let errorMessage = 'Verifica tus datos e intenta nuevamente'
-    
-    if (err.response) {
-      errorMessage = err.response.data?.msg || err.response.data?.message || errorMessage
-    } else if (err.message) {
-      errorMessage = err.message
-    }
-    
-    error('Credenciales incorrectas', errorMessage)
+
+    notify.success(response.msg)
+
+  } catch (error) {
+    console.log(error);
+    notify.error(error.response.data.errors[0])
   } finally {
     loading.value = false
   }
 }
+
+const presumbit = () => {
+  let valid = myform.value.validate()
+  if (valid) {
+    onSubmit()
+  }
+}
 </script>
 
-<style scoped>
-.page-container {
-  min-height: calc(100vh - 90px - 48px);
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-}
-
+<style>
 .login-card {
-  width: 90%;
-  max-width: 500px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-}
-
-.rounded-select {
-  border-radius: 12px;
-}
-
-.rounded-select :deep(.q-field__control) {
-  border-radius: 12px;
-}
-
-.wide-btn {
-  font-weight: 600;
-  letter-spacing: 1px;
-  border-radius: 8px;
+  width: 600px;
+  border: 3px solid #39a900;
+  border-radius: 24px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 0 !important;
 }
 
 .form-container {
   width: 100%;
   max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Animaciones */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
+.rounded-select {
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.rounded-select :deep(.q-field__control) {
+  border-radius: 10px !important;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .login-card {
-    width: 95%;
-    padding: 16px;
-  }
+.rounded-select :deep(.q-field__marginal) {
+  height: 56px;
+}
+
+.wide-btn {
+  width: 190px;
+  font-size: 1.1rem;
+  padding: 14px 0;
+}
+
+.material-symbols-outlined {
+  color: #888;
+}
+
+.content-top {
+  align-items: flex-start !important;
+}
+
+.page-container {
+  height: auto;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.flex.flex-center {
+  min-height: auto !important;
 }
 </style>
