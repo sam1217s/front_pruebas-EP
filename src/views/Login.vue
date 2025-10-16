@@ -232,7 +232,7 @@ const onSubmit = async () => {
 }
 </script>
 
-<style>
+<style scoped>
 .login-card {
   width: 600px;
   border: 3px solid #39a900;

@@ -4,25 +4,30 @@
       <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="SGVA"
         subtitle="Consulta, Registro y Visualización de empresas" imgSrc="/src/assets/Monitoria.jpg"
         route="admin/empresas" color="#5db82f" textColor="white" />
-      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'"
+      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'"
         title="Vista de Documentos" subtitle="Consulta y Visualización" imgSrc="/src/assets/Almacenamiento.jpg"
-        route="/vista" color="#5db82f" textColor="white" />
-      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Instructores"
+        route="admin/documentos" color="#5db82f" textColor="white" />
+      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Instructores"
         subtitle="Consulta Instructores" imgSrc="/src/assets/Pasantia_ONG.jpg" route="admin/instructores"
         color="#5db82f" textColor="white" />
-      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Aprendices"
-        subtitle="Consulta y Visualización" imgSrc="/src/assets/pyme.jpg" route="/vista" color="#5db82f"
+      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Aprendices"
+        subtitle="Consulta y Visualización" imgSrc="/src/assets/pyme.jpg" route="admin/aprendices" color="#5db82f"
         textColor="white" />
-      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTAL' || role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Parametros"
-        subtitle="Consulta Parametros" imgSrc="/src/assets/Pasantia_ONG.jpg" route="/vista" color="#5db82f"
+
+      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' ||  role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Reportes"
+        subtitle="Consulta y Visualización de Reportes" imgSrc="/src/assets/pyme.jpg" route="admin/reportes" color="#5db82f"
         textColor="white" />
-      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTAL' ||  role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Reportes"
-        subtitle="Consulta y Visualización de Reportes" imgSrc="/src/assets/pyme.jpg" route="/vista" color="#5db82f"
+
+      <Card v-if="role === 'ETAPA PRODUCTIVA VIRTUAL' ||  role === 'ETAPA PRODUCTIVA PRESENCIAL' || role === 'ADMINISTRADOR'" title="Novedades Admin"
+        subtitle="Consulta y Visualización de Novedades" imgSrc="/src/assets/pyme.jpg" route="admin/novedadesAdmin" color="#5db82f"
         textColor="white" />
+
       <Card v-if="role === 'INSTRUCTOR'" title="Informe Personal" subtitle="Consultar mi informacion y Horas"
         imgSrc="/src/assets/Monitoria.jpg" route="/vista" color="#5db82f" textColor="white" />
+
       <Card v-if="role === 'INSTRUCTOR'" title="Seguimientos" subtitle="Proceso de documentos de seguimiento"
         imgSrc="/src/assets/Almacenamiento.jpg" route="/vista" color="#5db82f" textColor="white" />
+        
       <Card v-if="role === 'INSTRUCTOR'" title="Bitácoras" subtitle="Procedimiento de subida de documentos de bitácoras"
         imgSrc="/src/assets/Pasantia_ONG.jpg" route="/vista" color="#5db82f" textColor="white" />
       <Card v-if="role === 'INSTRUCTOR'" title="Lista de Aprendices" subtitle="Consultar mis aprendices asignados"
@@ -127,7 +132,5 @@ onMounted(() => {
   justify-content: center;
   align-items: center;
   max-width: 100vw;
-  max-height: calc(100vh - 180px);
-  overflow-y: auto;
 }
 </style>

@@ -40,6 +40,7 @@ import PasantiaPyME from '../views/aprendiz/modalidadesEP/PasantiaPyME.vue'
 import PasantiaUPFamiliar from '../views/aprendiz/modalidadesEP/PasantiaUPFamiliar.vue'
 import ProyectoProductiva from '../views/aprendiz/modalidadesEP/ProyectoProductiva.vue'
 import VinculoLaboralContractual from '../views/aprendiz/modalidadesEP/VinculoLaboralContractual.vue'
+import novedadesAdmin from "../views/admin/novedadesAdmin.vue"
 
 const routes = [
   { path: "/", component: Login },
@@ -85,6 +86,7 @@ const routes = [
       { path:  'aprendiz/modalidadesEP/pasantiaupfamiliar', name: 'PasantiaUPFamiliar', component: PasantiaUPFamiliar },
       { path:  'aprendiz/modalidadesEP/proyectoproductiva', name: 'ProyectoProductiva', component: ProyectoProductiva },
       { path:  'aprendiz/modalidadesEP/vinculolaboralcontractual', name: 'VinculoLaboralContractual', component: VinculoLaboralContractual },
+      { path:  'admin/novedadesAdmin', name: 'novedadesAdmin', component: novedadesAdmin }
 
     ]
   }
